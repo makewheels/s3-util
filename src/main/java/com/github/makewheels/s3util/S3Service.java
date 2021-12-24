@@ -127,7 +127,7 @@ public class S3Service {
      * @return
      */
     public ObjectListing listObjects(ListObjectsRequest listObjectsRequest) {
-        return getClient().listObjects(listObjectsRequest);
+        return getClient().listObjects(listObjectsRequest.withBucketName(bucketName));
     }
 
     /**
@@ -136,7 +136,7 @@ public class S3Service {
      * @return
      */
     public ListObjectsV2Result listObjectsV2(ListObjectsV2Request listObjectsV2Request) {
-        return getClient().listObjectsV2(listObjectsV2Request);
+        return getClient().listObjectsV2(listObjectsV2Request.withBucketName(bucketName));
     }
 
     /**
