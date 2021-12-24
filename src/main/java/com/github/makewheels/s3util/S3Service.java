@@ -157,7 +157,6 @@ public class S3Service {
      * @return
      */
     public PutObjectResult pubObject(PutObjectRequest putObjectRequest) {
-        PutObjectResult putObjectResult = getClient().putObject(putObjectRequest);
         putObjectRequest.withBucketName(bucketName);
         return getClient().putObject(putObjectRequest);
     }
