@@ -151,6 +151,18 @@ public class S3Service {
     }
 
     /**
+     * 上传File
+     *
+     * @param putObjectRequest
+     * @return
+     */
+    public PutObjectResult pubObject(PutObjectRequest putObjectRequest) {
+        PutObjectResult putObjectResult = getClient().putObject(putObjectRequest);
+        putObjectRequest.withBucketName(bucketName);
+        return getClient().putObject(putObjectRequest);
+    }
+
+    /**
      * 上传String content
      *
      * @param key
