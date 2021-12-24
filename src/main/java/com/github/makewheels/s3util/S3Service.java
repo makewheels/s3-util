@@ -122,6 +122,24 @@ public class S3Service {
     }
 
     /**
+     * 查询objects
+     *
+     * @return
+     */
+    public ObjectListing listObjects(ListObjectsRequest listObjectsRequest) {
+        return getClient().listObjects(listObjectsRequest);
+    }
+
+    /**
+     * 查询objects
+     *
+     * @return
+     */
+    public ListObjectsV2Result listObjectsV2(ListObjectsV2Request listObjectsV2Request) {
+        return getClient().listObjectsV2(listObjectsV2Request);
+    }
+
+    /**
      * 上传File
      *
      * @param key
