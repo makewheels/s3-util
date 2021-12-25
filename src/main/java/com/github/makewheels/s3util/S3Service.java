@@ -61,12 +61,8 @@ public class S3Service {
             initEndPoint = endpoint;
         }
         AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
-        AwsClientBuilder.EndpointConfiguration configuration = new AwsClientBuilder.EndpointConfiguration(
-                initEndPoint, region);
-        amazonS3 = AmazonS3ClientBuilder.standard()
-                .withCredentials(new AWSStaticCredentialsProvider(credentials))
-                .withEndpointConfiguration(configuration)
-                .build();
+        AwsClientBuilder.EndpointConfiguration configuration = new AwsClientBuilder.EndpointConfiguration(initEndPoint, region);
+        amazonS3 = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(credentials)).withEndpointConfiguration(configuration).build();
     }
 
     public void init(S3Config config) {
@@ -74,12 +70,8 @@ public class S3Service {
             return;
         }
         AWSCredentials credentials = new BasicAWSCredentials(config.getAccessKey(), config.getSecretKey());
-        AwsClientBuilder.EndpointConfiguration configuration = new AwsClientBuilder.EndpointConfiguration(
-                config.getEndpoint(), config.getRegion());
-        amazonS3 = AmazonS3ClientBuilder.standard()
-                .withCredentials(new AWSStaticCredentialsProvider(credentials))
-                .withEndpointConfiguration(configuration)
-                .build();
+        AwsClientBuilder.EndpointConfiguration configuration = new AwsClientBuilder.EndpointConfiguration(config.getEndpoint(), config.getRegion());
+        amazonS3 = AmazonS3ClientBuilder.standard().withCredentials(new AWSStaticCredentialsProvider(credentials)).withEndpointConfiguration(configuration).build();
         bucketName = config.getBucketName();
         region = config.getRegion();
     }
@@ -89,6 +81,10 @@ public class S3Service {
             init();
         }
         return amazonS3;
+    }
+
+    public String getBucketName() {
+        return bucketName;
     }
 
     /**
@@ -156,7 +152,7 @@ public class S3Service {
      * @param putObjectRequest
      * @return
      */
-    public PutObjectResult pubObject(PutObjectRequest putObjectRequest) {
+    public PutObjectResult putObject(PutObjectRequest putObjectRequest) {
         putObjectRequest.withBucketName(bucketName);
         return getClient().putObject(putObjectRequest);
     }
@@ -170,6 +166,27 @@ public class S3Service {
      */
     public PutObjectResult putObject(String key, String content) {
         return getClient().putObject(bucketName, key, content);
+    }
+
+    /**
+     * copyObject
+     *
+     * @param from
+     * @param to
+     * @return
+     */
+    public CopyObjectResult copyObject(String from, String to) {
+        return getClient().copyObject(bucketName, from, bucketName, to);
+    }
+
+    /**
+     * copyObject
+     *
+     * @param copyObjectRequest
+     * @return
+     */
+    public CopyObjectResult copyObject(CopyObjectRequest copyObjectRequest) {
+        return getClient().copyObject(copyObjectRequest);
     }
 
     /**
@@ -243,9 +260,7 @@ public class S3Service {
      * @return
      */
     public String generatePresignedUrl(String key, Duration duration, HttpMethod httpMethod) {
-        GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(bucketName, key)
-                .withMethod(httpMethod)
-                .withExpiration(Date.from(Instant.now().plus(duration)));
+        GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(bucketName, key).withMethod(httpMethod).withExpiration(Date.from(Instant.now().plus(duration)));
         return getClient().generatePresignedUrl(request).toString();
     }
 
